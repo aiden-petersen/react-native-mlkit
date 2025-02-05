@@ -1,4 +1,5 @@
 import { requireNativeModule } from "expo-modules-core";
+import { SharedRef as SharedRefType } from 'expo-modules-core/src/ts-declarations/SharedRef';
 
 export type RNMLKitImageLabel = {
   text: string;
@@ -25,10 +26,10 @@ type RNMLKitImageLabelingModule = {
     modelSpec: RNMLKitImageLabelerSpec
   ) => Promise<string | undefined>;
   isLoaded: (modelName: string) => boolean;
-  runClassification: (imagePath: string) => Promise<ClassificationResult>;
+  runClassification: (image: SharedRefType<'image'>) => Promise<ClassificationResult>;
   classifyImage: (
     modelName: string,
-    imagePath: string
+    image: SharedRefType<'image'>
   ) => Promise<ClassificationResult>;
   updateOptionsAndReload: (
     modelName: string,
@@ -59,9 +60,9 @@ function isLoaded(modelName: string): boolean {
 
 async function classifyImage(
   modelName: string,
-  imagePath: string
+  image: SharedRefType<'image'>
 ): Promise<ClassificationResult> {
-  return await expoMLKitImageLabeler.classifyImage(modelName, imagePath);
+  return await expoMLKitImageLabeler.classifyImage(modelName, image);
 }
 
 async function updateOptionsAndReload(

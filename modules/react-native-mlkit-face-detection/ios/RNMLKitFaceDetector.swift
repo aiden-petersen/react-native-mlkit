@@ -39,7 +39,7 @@ class RNMLKitFaceDetector {
 
         do {
             let faces: [Face] = try await faceDetector.process(image.visionImage)
-            return RNMLKitFaceDetectionResult(faces: faces, imagePath: image.imageURL.absoluteString)
+            return RNMLKitFaceDetectionResult(faces: faces, image: image)
         } catch {
             throw RNMLKitFaceDetectorError.classificationError(error: error)
         }

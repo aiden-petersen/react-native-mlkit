@@ -9,23 +9,24 @@ import ExpoModulesCore
 import Foundation
 import MLKitFaceDetection
 import MLKitVision
+import RNMLKitCore
 
 // Record struct to hold the raw data
 struct RNMLKitFaceDetectionResultRecord: Record {
     @Field
     var faces: [RNMLKitFace] = []
     @Field
-    var imagePath: String
+    var image: SharedRef<UIImage>? = nil
 }
 
 // Class to provide getter for the record and easy manipulation
 public class RNMLKitFaceDetectionResult {
     var faces: [Face]
-    var imagePath: String
+    var image: SharedRef<UIImage>
 
-    init(faces: [Face], imagePath: String) {
+    init(faces: [Face], image: RNMLKitImage) {
         self.faces = faces
-        self.imagePath = imagePath
+        self.image = image.uiImage
     }
 
     var record: RNMLKitFaceDetectionResultRecord {
@@ -61,7 +62,7 @@ public class RNMLKitFaceDetectionResult {
         }
 
         record.faces = faces
-        record.imagePath = self.imagePath
+        record.image = self.image
         return record
     }
 }

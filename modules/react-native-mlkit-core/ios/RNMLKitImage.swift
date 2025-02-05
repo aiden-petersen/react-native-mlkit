@@ -1,5 +1,6 @@
 import Foundation
 import MLKitVision
+import ExpoModulesCore
 
 public enum RNMLKitImageError:Error {
     case invalidImageURL(imagePath:String)
@@ -8,32 +9,12 @@ public enum RNMLKitImageError:Error {
 
 
 public class RNMLKitImage {
-
-    public var imageURL: URL
-    public var uiImage: UIImage
+    public var uiImage: SharedRef<UIImage>
     public var visionImage: VisionImage
-
-    public init(imagePath:String) throws {
-        guard let imageURL = URL(string:imagePath) else {
-            throw RNMLKitImageError.invalidImageURL(imagePath:imagePath)
-        }
-
-        self.imageURL = imageURL;
-
-
-        guard let uiImage = UIImage(contentsOfFile: imageURL.path) else {
-            throw RNMLKitImageError.couldNotLoadImage(imagePath:imageURL.path)
-        }
-
-        self.uiImage = uiImage
-
-        visionImage = VisionImage(image:uiImage)
-        visionImage.orientation = uiImage.imageOrientation
-
+    
+    public init(image:SharedRef<UIImage>) throws {
+        self.uiImage = image;
+        visionImage = VisionImage(image:image.ref)
+        visionImage.orientation = image.ref.imageOrientation
     }
-
-
-
-
-
 }

@@ -6,6 +6,8 @@ import {
   useRNMLKitImageLabelerContext,
   ModelAssets,
 } from "./expoMLKitImageLabelerContext";
+import { SharedRef as SharedRefType } from 'expo-modules-core/src/ts-declarations/SharedRef';
+
 
 type Status = "init" | "loading" | "success" | "error";
 
@@ -17,7 +19,7 @@ type ClassifyImageHookResult = {
 
 export function useImageClassification<T extends ModelAssets>(
   modelName: keyof T,
-  image?: { uri?: string; localUri?: string }
+  image?: SharedRefType<'image'>
 ): ClassifyImageHookResult {
   const [result, setResult] = useState<ClassificationResult | undefined>(
     undefined
@@ -35,7 +37,6 @@ export function useImageClassification<T extends ModelAssets>(
   }
 
   const model = context.models[modelName];
-  const imagePath = image?.localUri ?? image?.uri;
 
   useEffect(() => {
     if (!model) {
@@ -51,21 +52,14 @@ export function useImageClassification<T extends ModelAssets>(
       return;
     }
 
-    if (!imagePath) {
-      setStatus("error");
-      setResult(undefined);
-      setError(new Error("useClassifyImage: image has no localUri"));
-      return;
-    }
-
     const classifyImage = async () => {
-      if (!imagePath) {
+      if (!image) {
         return;
       }
       setStatus("loading");
       try {
         if (model) {
-          const classification = await model.classifyImage(imagePath);
+          const classification = await model.classifyImage(image);
           setResult(classification);
           setStatus("success");
         }
@@ -75,7 +69,7 @@ export function useImageClassification<T extends ModelAssets>(
       }
     };
     classifyImage();
-  }, [model, imagePath]);
+  }, [model, image]);
 
   return {
     result,

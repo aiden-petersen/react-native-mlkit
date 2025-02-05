@@ -10,6 +10,7 @@ import MLKitCommon
 import MLKitObjectDetection
 import RNMLKitCore
 import MLKitObjectDetectionCustom
+import ExpoModulesCore
 
 
 func getDefaultObjectDetectorOptions() -> ObjectDetectorOptions {
@@ -29,9 +30,8 @@ public class RNMLKitObjectDetector: RNMLKitObjectDetectorCommon {
         nativeOptions = options?.objectDetectorOptions ?? getDefaultObjectDetectorOptions()
     }
     
-    public func detectObjects(imagePath: String) async throws -> [RNMLKitObjectDetectionObjectRecord] {
-        print(" --> IMAGEPATH: \(imagePath)")
-        let image = try RNMLKitImage(imagePath: imagePath)
+    public func detectObjects(image: SharedRef<UIImage>) async throws -> [RNMLKitObjectDetectionObjectRecord] {
+        let image = try RNMLKitImage(image: image)
         print("IMAGE \(image)")
         return try self.detectObjects(image: image)
     }

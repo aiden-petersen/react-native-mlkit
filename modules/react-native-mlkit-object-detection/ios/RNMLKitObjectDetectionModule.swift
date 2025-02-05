@@ -87,7 +87,7 @@ public class RNMLKitObjectDetectionModule: Module {
             }
         }
 
-        AsyncFunction("detectObjects") { (modelName: String, imagePath: String, promise: Promise) in
+        AsyncFunction("detectObjects") { (modelName: String, image: SharedRef<UIImage>, promise: Promise) in
             let logger = Logger(logHandlers: [createOSLogHandler(category: Logger.EXPO_LOG_CATEGORY)])
 
             guard let objectDetector = self.objectDetectors[modelName] else { // 2. Retrieve the detector by name
@@ -98,7 +98,7 @@ public class RNMLKitObjectDetectionModule: Module {
 
             Task {
                 do {
-                    let result = try await objectDetector.detectObjects(imagePath: imagePath)
+                    let result = try await objectDetector.detectObjects(image: image)
                     logger.info("detectObjects(\(modelName)): found \(result.count) objects")
                     logger.info("RNMLKitObjectDetection", "detectObjects: Detection completed successfully")
                     promise.resolve(result)

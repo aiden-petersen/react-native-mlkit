@@ -25,7 +25,7 @@ public class RNMLKitFaceDetectionModule: Module {
             promise.resolve()
         }
 
-        AsyncFunction("detectFaces") { (imagePath: String, promise: Promise) in
+        AsyncFunction("detectFaces") { (image: SharedRef<UIImage>, promise: Promise) in
             let logger = Logger(logHandlers: [createOSLogHandler(category: Logger.EXPO_LOG_CATEGORY)])
 
             Task {
@@ -34,7 +34,7 @@ public class RNMLKitFaceDetectionModule: Module {
                         rejectPromiseWithMessage(promise: promise, message: "[RNMLKitFaceDetection.detectFace] Face detector not initialized", domain: ERROR_DOMAIN)
                         return
                     }
-                    let image = try RNMLKitImage(imagePath: imagePath)
+                    let image = try RNMLKitImage(image: image)
                     let result = try await faceDetector.detectFaces(image: image)
                     logger.debug(result)
                     // Use result to resolve promise

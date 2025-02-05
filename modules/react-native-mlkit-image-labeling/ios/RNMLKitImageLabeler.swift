@@ -81,15 +81,14 @@ public class RNMLKitImageLabeler {
         }
     }
 
-    public func classifyImage(imagePath:String) async throws -> [Result] {
+    public func classifyImage(image: SharedRef<UIImage>) async throws -> [Result] {
         // convert image to relevant image class
-        let image = try RNMLKitImage(imagePath: imagePath)
+        let image = try RNMLKitImage(image: image)
 
         return try await self.classifyImage(image: image)
     }
 
     public func classifyImage(image: RNMLKitImage) async throws -> [Result] {
-
 
         var labels: [ImageLabel]
 

@@ -76,9 +76,8 @@ public class RNMLKitImageLabelingModule: Module {
             }
         }
 
-        AsyncFunction("classifyImage") { (modelName: String, imagePath: String, promise: Promise) in
+        AsyncFunction("classifyImage") { (modelName: String, image: SharedRef<UIImage>, promise: Promise) in
             let logger = Logger(logHandlers: [createOSLogHandler(category: Logger.EXPO_LOG_CATEGORY)])
-            logger.info("RNMLKit", "classify image: Classifying image: \(imagePath) ")
 
             guard let imageLabeler = self.labelers[modelName] else {
                 logger.error("[classifyImage] Classification Failed: Cannot find model named '\(modelName). Has it been loaded?")
@@ -88,7 +87,7 @@ public class RNMLKitImageLabelingModule: Module {
 
             Task {
                 do {
-                    let results = try await imageLabeler.classifyImage(imagePath: imagePath)
+                    let results = try await imageLabeler.classifyImage(image: image)
                     let resultRecords = results.map { RNMLKitImageLabelResult(text: $0.text, confidence: $0.confidence, index: $0.index) }
                     logger.info("RNMLKit", "classify image: Image classification successful")
 

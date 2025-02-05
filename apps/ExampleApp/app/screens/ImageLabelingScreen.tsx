@@ -5,6 +5,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackScreenProps } from "../navigators"
 import { Screen, Text, Icon, ImageSelector } from "../components"
 import { useTypedNavigation } from "../navigators/useTypedNavigation"
+import { Image } from "expo-image"
 
 import {
   useModels,
@@ -57,7 +58,8 @@ const ImageLabelingScreenComponent: FC<ImageLabelingScreenProps> = observer(
         console.log("CLASSIFYING:", image.name)
         setStatus("classifying")
         try {
-          const classificationResult = await model.classifyImage(image.uri)
+          const loadedImage = await Image.loadAsync(image.uri)
+          const classificationResult = await model.classifyImage(loadedImage)
           setResult(classificationResult)
           setStatus("done")
         } catch (error) {

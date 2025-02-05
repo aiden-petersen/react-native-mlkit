@@ -3,6 +3,7 @@ import RNMLKitImageLabeler, {
   RNMLKitCustomImageLabelerOptions,
   RNMLKitImageLabelerSpec,
 } from "./RNMLKitImageLabeler";
+import { SharedRef as SharedRefType } from 'expo-modules-core/src/ts-declarations/SharedRef';
 
 export class RNMLKitClassifier {
   private modelSpec: RNMLKitImageLabelerSpec;
@@ -19,7 +20,7 @@ export class RNMLKitClassifier {
     return RNMLKitImageLabeler.isLoaded(this.modelSpec.modelName);
   }
 
-  async classifyImage(imagePath: string): Promise<ClassificationResult> {
+  async classifyImage(image: SharedRefType<'image'>): Promise<ClassificationResult> {
     // Perform a check if the model is loaded
     if (!this.isLoaded()) {
       throw new Error("Model is not loaded");
@@ -29,7 +30,7 @@ export class RNMLKitClassifier {
       // Call the native method with the modelName as an extra parameter
       return RNMLKitImageLabeler.classifyImage(
         this.modelSpec.modelName,
-        imagePath
+        image
       );
     } catch (err: any) {
       // Handle specific errors as needed, or rethrow them
